@@ -1,0 +1,110 @@
+﻿@model IdeaMarket.Dto.VendorSettings
+@{
+    ViewBag.Title = "Профиль";
+}
+@using IdeaMarket.Dto.Enums
+
+@Html.Partial( "Sidebar" )
+
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Настройки профиля продавца
+        </div>
+        <div class="panel-body">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1>@Model.Name <small>@Model.Login</small></h1>
+                        <div class="form-group-sm">
+                            @Html.LabelFor( m => m.Description, "Описание" ):
+                            @Html.TextAreaFor( m => m.Description, new { @class = "form-control" } )
+                        </div>
+                        <div class="form-group-sm">
+                            @Html.LabelFor( m => m.Visibility, "Видимость" )
+                            <div class="container-fluid">
+                                @foreach( VendorVisibility vis in Enum.GetValues( typeof( VendorVisibility ) ) )
+                                {
+                                    <div class="col-md-12">
+                                        <label>
+                                            @Html.RadioButton( "Visibility", Model.Visibility == vis, new { value = vis } ) @vis
+                                        </label>
+                                    </div>
+                                }
+                                <div class="col-md-12">
+                                    @Html.TextBox( "PeopleWhoCanSee", "", new { @class = "form-control", placeholder = "Логины, через запятую" } )
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group-sm">
+                            @Html.LabelFor( m => m.Status, "Статус" )
+                            <div class="container-fluid">
+                                @foreach( VendorStatus st in Enum.GetValues( typeof( VendorStatus ) ) )
+                                {
+                                    <div class="col-md-12">
+                                        <label>
+                                            @Html.RadioButton( "Status", Model.Status == st, new { value = st } ) @st
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="form-group-sm">
+                            @Html.LabelFor( m => m.Categories, "Категории" )
+                            <div class="container-fluid">
+                                @foreach( IdeasCategory cat in Enum.GetValues( typeof( IdeasCategory ) ) )
+                                {
+                                    <div class="col-md-6">
+                                        <label>
+                                            @Html.CheckBox( "Categories", Model.Categories.Contains( cat ), new { value = cat } ) @cat
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="form-group-sm">
+                            @Html.LabelFor( m => m.NewPassword, "Новый пароль" ):
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        @Html.TextBoxFor( m => m.NewPassword, new { @class = "form-control", type = "password", placeholder = "Новый пароль" } )
+                                    </div>
+                                    <div class="col-md-8 text-danger">
+                                        Пароль слишком короткий (минимум 6 символов)
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        @Html.TextBox( "Confirm", "", new { @class = "form-control", type = "password", placeholder = "Подтверждение" } )
+                                    </div>
+                                    <div class="col-md-8 text-danger">
+                                        Введённые пароли не совпадают
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group-sm">
+                            @Html.LabelFor( m => m.OldPassword, "Введите пароль для подтверждения изменений" )
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        @Html.TextBoxFor( m => m.OldPassword, new { @class = "form-control", type = "password", placeholder = "Старый пароль" } )
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group-sm">
+                            <div class="text-right">
+                                <input type="button" class="btn btn-success" value="Сохранить изменения" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    Vendor.sidebar('@Url.Action( "Settings" )')
+</script>

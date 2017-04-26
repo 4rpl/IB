@@ -1,0 +1,64 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.form-group-sm {
+    margin-bottom: 15px;
+}
+
+.sidebar {
+    position: fixed;
+    top: 51px;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-right: 1px solid #eee;
+    background-color: #f7f7f7;
+}
+
+.sidebar {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.sidebar .nav {
+    margin-bottom: 20px;
+}
+
+.sidebar .nav-item {
+    width: 100%;
+}
+
+.sidebar .nav-item + .nav-item {
+    margin-left: 0;
+}
+
+.sidebar .nav-link {
+    border-radius: 0;
+}
+
+.nav-sidebar li a {
+    color: lightseagreen;
+}
+
+.nav-sidebar li.active a {
+    color: #f7f7f7;
+    background-color: lightseagreen;
+}
+
+.container-fluid > .row {
+    margin-bottom: 5px;
+}
