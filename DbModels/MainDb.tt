@@ -1,0 +1,133 @@
+<#@ template language="C#" debug="True" hostSpecific="True"                            #>
+<#@ output extension=".generated.cs"                                                   #>
+<#@ include file="$(ProjectDir)LinqToDB.Templates\LinqToDB.PostgreSQL.Tools.ttinclude" #>
+<#@ include file="$(ProjectDir)LinqToDB.Templates\PluralizationService.ttinclude"      #>
+<#
+	/*
+		1. Copy this file to a folder where you would like to generate your data model,
+		   rename it, and delete .txt extension. For example:
+
+			MyProject
+				DataModels
+					MyDatabase.tt
+
+		2. Modify the connection settings below to connect to your database.
+
+		3. Add connection string to the web/app.config file:
+
+			<connectionStrings>
+				<add name="MyDatabase" connectionString="Server=MyServer;Port=5432;Database=MyDatabase;User Id=postgres;Password=TestPassword;Pooling=true;MinPoolSize=10;MaxPoolSize=100;Protocol=3;" providerName="PostgreSQL" />
+			</connectionStrings>
+
+		4. To access your database use the following code:
+
+			using (var db = new MyDatabaseDB())
+			{
+				var q =
+					from c in db.Customers
+					select c;
+
+				foreach (var c in q)
+					Console.WriteLine(c.ContactName);
+			}
+
+		5. See more at https://github.com/linq2db/t4models/blob/master/Templates/ReadMe.LinqToDB.md.
+	*/
+
+	
+	// Adds using of namespace.
+	Model.Usings.Add( "RHSoft.RHCostaConcord.DAL.Enums" );
+	
+	NamespaceName = "RHSoft.RHCostaConcord.DAL.DataModel";
+	DataContextName = "MainDB";
+	// GenerateDataTypes = true;
+	DefaultConfiguration = "MainDb";
+	
+	// LoadPostgreSQLMetadata("clio", "5432", "rhcc", usrName, "qwerty@1");
+	// LoadPostgreSQLMetadata(string connectionString);
+	
+	var dbName = "postgres";
+	var usrName = "application";
+	var dataConnection = GetPostgreSQLConnection( "127.0.0.1", "5432", dbName, usrName, "qwerty" );
+	LoadMetadata( dataConnection );
+	
+	var cmd = dataConnection.CreateCommand();
+	var enums = new Dictionary<string, string>
+	{
+	{"address_local_detail.language", "Languages"},
+	{"owner_local_detail.language", "Languages"},
+	{"estate_local_detail.language", "Languages"},
+	{"estate.status", "EstateStatuses"},
+	{"estate_status_change.old_status", "EstateStatuses"},
+	{"estate_status_change.new_status", "EstateStatuses"},
+	{"estate.conditioner", "ConditionerExistence"},
+	{"estate.heating", "HeatingExistence"},
+	{"estate.pet_animals", "PetAnimalsAvailability"},
+	{"", ""}
+	};
+	
+	foreach( var t in Tables.Values )
+	{
+	t.TypeName = ConvertPosgreSQLNames( t.TypeName );
+	t.DataContextPropertyName = Pluralization.ToPlural( t.TypeName );
+	
+	// Get real table description.
+	cmd.CommandText = "select obj_description('" + t.Schema + "." + t.TableName + "'::regclass::oid)";
+	t.Description = cmd.ExecuteScalar().ToString();
+	
+	foreach( var c in t.Columns.Values )
+	{
+	if (c.IsPrimaryKey && c.MemberName == "id")
+	c.MemberName = "ID";
+	else
+	c.MemberName = ConvertPosgreSQLNames( c.MemberName );
+	
+	// Get real column description.
+	cmd.CommandText = string.Format( @"SELECT
+	col_description(cols.table_name::regclass::oid, cols.ordinal_position::int) as column_comment
+	FROM information_schema.columns cols
+	where
+	cols.table_catalog = '{0}' AND
+	cols.table_schema = '{1}' AND
+	cols.table_name = '{2}' AND
+	cols.column_name = '{3}'",
+	dbName, t.Schema, t.TableName, c.ColumnName
+	);
+	c.Description = cmd.ExecuteScalar().ToString();
+	
+	// Change property's type to Enum, if column exists in enums dictionary (local variable< defined above).
+	var colKey = t.TableName + "." + c.ColumnName;
+	if( enums.ContainsKey( colKey ) )
+	{
+	c.Type = enums[colKey] + (c.IsNullable ? "?" : "");
+	}
+	
+	// Add DisplayName attribute, if needed.
+	/*if( !string.IsNullOrEmpty( c.Description ) )
+	{
+	var dn = new Attribute( "System.ComponentModel.DisplayName" );
+	dn.Parameters.Add( '"' + c.Description + '"' );
+	c.Attributes.Add( dn );
+	}*/
+	}
+	
+	foreach( var fk in t.ForeignKeys.Values )
+	{
+		fk.MemberName =
+			(fk.BackReference == null) ?
+			// —сылка на коллекцию детей - берем название из таблицы, и делаем множественное число.
+			Pluralization.ToPlural( ConvertPosgreSQLNames( fk.OtherTable.TypeName ) ) :
+			// —сылка на родител€ - берем название из свой же колонки, и отрезаем "Id".
+			ConvertPosgreSQLNames( fk.ThisColumns[0].MemberName ).TrimEnd( new char[] { 'I', 'd' } );
+		}
+	}
+	
+	GenerateModel();
+	#><#+
+	// Convert PosgreSQL name to human readable form: without "_", and with uppercase fist character of each word.
+	// for example: "owner_passport" converts to "OwnerPassport".
+	string ConvertPosgreSQLNames( string name )
+	{
+		return string.Join( "", name.Split( '_' ).ToList().Select( s => s.First().ToString().ToUpper() + s.Substring( 1 ) ).ToArray() );
+	}
+#>
