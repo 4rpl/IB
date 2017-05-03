@@ -36,14 +36,14 @@
 
 	
 	// Adds using of namespace.
-	Model.Usings.Add( "RHSoft.RHCostaConcord.DAL.Enums" );
+	Model.Usings.Add( "IdeaMarket.DataModel.Enums" );
 	
-	NamespaceName = "RHSoft.RHCostaConcord.DAL.DataModel";
+	NamespaceName = "IdeaMarket.DataModel";
 	DataContextName = "MainDB";
 	// GenerateDataTypes = true;
 	DefaultConfiguration = "MainDb";
 	
-	// LoadPostgreSQLMetadata("clio", "5432", "rhcc", usrName, "qwerty@1");
+	// LoadPostgreSQLMetadata("127.0.0.1", "5432", "postgres", usrName, "qwerty");
 	// LoadPostgreSQLMetadata(string connectionString);
 	
 	var dbName = "postgres";

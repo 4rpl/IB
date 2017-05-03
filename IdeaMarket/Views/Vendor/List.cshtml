@@ -15,14 +15,14 @@
                 Maecenas aliquet, sem ut gravida laoreet, felis purus laoreet ipsum, quis porttitor nunc ligula ut nibh. In convallis eget velit in blandit. Nullam semper ipsum a urna pellentesque, eget ullamcorper ligula commodo. Ut sollicitudin ullamcorper turpis a cursus. Donec feugiat interdum lectus in convallis. Nullam lectus odio, interdum nec augue sed, condimentum accumsan sem. Nulla accumsan, lectus suscipit ornare ullamcorper, lorem ipsum placerat turpis, sed euismod nibh tellus in nunc.
             </p>
         </div>
-        <table class="table table-hover">
+        <table class="table table-hover table-sortable">
             <thead>
                 <tr>
-                    <th>Название</th>
+                    <th><a href="#" onclick="Project.Common.sortTable($('.table-sortable'), 0)">Название <span class="glyphicon glyphicon-sort-by-alphabet"></span></a></th>
                     <th>Категории</th>
-                    <th>Объем</th>
-                    <th>Рейтинг</th>
-                    <th>Статус</th>
+                    <th><a href="#" onclick="Project.Common.sortTable($('.table-sortable'), 2)">Объем</a></th>
+                    <th><a href="#" onclick="Project.Common.sortTable($('.table-sortable'), 3)">Рейтинг</a></th>
+                    <th><a href="#" onclick="Project.Common.sortTable($('.table-sortable'), 4)">Статус</a></th>
                     <th> </th>
                 </tr>
             </thead>
