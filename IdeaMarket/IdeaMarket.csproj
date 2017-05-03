@@ -227,6 +227,7 @@
     <Content Include="Views\Vendor\EditIdea.cshtml" />
     <Content Include="Views\Vendor\Sidebar.cshtml" />
     <Content Include="Views\Vendor\Settings.cshtml" />
+    <Content Include="Views\Vendor\Comments.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

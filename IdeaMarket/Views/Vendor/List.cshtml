@@ -9,50 +9,46 @@
         <div class="panel-heading">
             Мои идеи
         </div>
-        <div class="panel-body">
-            <p>
-                Описание страницы со списком.<br />
-                Maecenas aliquet, sem ut gravida laoreet, felis purus laoreet ipsum, quis porttitor nunc ligula ut nibh. In convallis eget velit in blandit. Nullam semper ipsum a urna pellentesque, eget ullamcorper ligula commodo. Ut sollicitudin ullamcorper turpis a cursus. Donec feugiat interdum lectus in convallis. Nullam lectus odio, interdum nec augue sed, condimentum accumsan sem. Nulla accumsan, lectus suscipit ornare ullamcorper, lorem ipsum placerat turpis, sed euismod nibh tellus in nunc.
-            </p>
+        <div class="table-responsive">
+            <table class="table table-hover table-sortable">
+                <thead>
+                    <tr>
+                        <th><a href="#" onclick="Project.Common.sortTable($('.table-sortable'), 0)">Название <span class="glyphicon glyphicon-sort-by-alphabet"></span></a></th>
+                        <th>Категории</th>
+                        <th><a href="#" onclick="Project.Common.sortTable($('.table-sortable'), 2)">Объем</a></th>
+                        <th><a href="#" onclick="Project.Common.sortTable($('.table-sortable'), 3)">Рейтинг</a></th>
+                        <th><a href="#" onclick="Project.Common.sortTable($('.table-sortable'), 4)">Статус</a></th>
+                        <th> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Lorem Ipsum</td>
+                        <td>IT, Авто</td>
+                        <td>4к слов, 6 вложений</td>
+                        <td class="text-success">+16.3</td>
+                        <td class="text-success">Опубликована</td>
+                        <td>@Html.ActionLink( "Ред.", "EditIdea" )</td>
+                    </tr>
+                    <tr>
+                        <td>Dolor sit amet</td>
+                        <td>IT, Религия</td>
+                        <td>99к слов, 166 вложений</td>
+                        <td class="text-danger">-1.9</td>
+                        <td class="text-warning">Черновик</td>
+                        <td>@Html.ActionLink( "Ред.", "EditIdea" )</td>
+                    </tr>
+                    <tr>
+                        <td>Aliquam nulla ex, luctus sed lorem quis</td>
+                        <td>Космос, Медицина, Пузожители</td>
+                        <td>2к слов, 0 вложений</td>
+                        <td>0</td>
+                        <td class="text-danger">Не допущена</td>
+                        <td>@Html.ActionLink( "Ред.", "EditIdea" )</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-        <table class="table table-hover table-sortable">
-            <thead>
-                <tr>
-                    <th><a href="#" onclick="Project.Common.sortTable($('.table-sortable'), 0)">Название <span class="glyphicon glyphicon-sort-by-alphabet"></span></a></th>
-                    <th>Категории</th>
-                    <th><a href="#" onclick="Project.Common.sortTable($('.table-sortable'), 2)">Объем</a></th>
-                    <th><a href="#" onclick="Project.Common.sortTable($('.table-sortable'), 3)">Рейтинг</a></th>
-                    <th><a href="#" onclick="Project.Common.sortTable($('.table-sortable'), 4)">Статус</a></th>
-                    <th> </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Lorem Ipsum</td>
-                    <td>IT, Авто</td>
-                    <td>4к слов, 6 вложений</td>
-                    <td class="text-success">+16.3</td>
-                    <td class="text-success">Опубликована</td>
-                    <td>@Html.ActionLink("Ред.", "EditIdea")</td>
-                </tr>
-                <tr>
-                    <td>Dolor sit amet</td>
-                    <td>IT, Религия</td>
-                    <td>99к слов, 166 вложений</td>
-                    <td class="text-danger">-1.9</td>
-                    <td class="text-warning">Черновик</td>
-                    <td>@Html.ActionLink( "Ред.", "EditIdea" )</td>
-                </tr>
-                <tr>
-                    <td>Aliquam nulla ex, luctus sed lorem quis</td>
-                    <td>Космос, Медицина, Пузожители</td>
-                    <td>2к слов, 0 вложений</td>
-                    <td>0</td>
-                    <td class="text-danger">Не допущена</td>
-                    <td>@Html.ActionLink( "Ред.", "EditIdea" )</td>
-                </tr>
-            </tbody>
-        </table>
     </div>
 </div>
 

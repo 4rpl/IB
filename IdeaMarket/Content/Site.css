@@ -62,3 +62,12 @@ textarea {
 .container-fluid > .row {
     margin-bottom: 5px;
 }
+
+.userpic-small {
+    height: 44px;
+    width: 44px;
+    border: 2px solid #fff;
+    border-radius: 22px;
+    background-color: #fff;
+    margin: -6px 0 -6px -6px;
+}

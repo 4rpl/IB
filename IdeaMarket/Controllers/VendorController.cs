@@ -30,6 +30,7 @@ namespace IdeaMarket.Controllers
             public string Status { get; set; }
             public int Cost { get; set; }
         }
+
         [HttpGet]
         public ActionResult EditIdea()
         {
@@ -42,6 +43,7 @@ namespace IdeaMarket.Controllers
                 Cost = 12
             } );
         }
+
         [HttpGet]
         public ActionResult Settings()
         {
@@ -60,8 +62,15 @@ namespace IdeaMarket.Controllers
             };
             return View( model );
         }
+
         [HttpPost]
         public ActionResult Settings( VendorSettings settings )
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult Comments()
         {
             return View();
         }
