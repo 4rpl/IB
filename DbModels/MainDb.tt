@@ -93,7 +93,7 @@
 	cols.column_name = '{3}'",
 	dbName, t.Schema, t.TableName, c.ColumnName
 	);
-	c.Description = cmd.ExecuteScalar().ToString();
+	//c.Description = cmd.ExecuteScalar().ToString();
 	
 	// Change property's type to Enum, if column exists in enums dictionary (local variable< defined above).
 	var colKey = t.TableName + "." + c.ColumnName;

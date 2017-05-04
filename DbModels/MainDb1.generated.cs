@@ -5,7 +5,8 @@
 // </auto-generated>
 //---------------------------------------------------------------------------------------------------
 using System;
-
+using System.Collections.Generic;
+using System.Linq;
 
 using LinqToDB;
 using LinqToDB.Mapping;
@@ -19,6 +20,14 @@ namespace IdeaMarket.DataModel
 	/// </summary>
 	public partial class MainDB : LinqToDB.Data.DataConnection
 	{
+		public ITable<Category>     Categories     { get { return this.GetTable<Category>(); } }
+		public ITable<File>         Files          { get { return this.GetTable<File>(); } }
+		public ITable<Idea>         Ideas          { get { return this.GetTable<Idea>(); } }
+		public ITable<IdeaCategory> IdeaCategories { get { return this.GetTable<IdeaCategory>(); } }
+		public ITable<IdeaFile>     IdeaFiles      { get { return this.GetTable<IdeaFile>(); } }
+		public ITable<User>         Users          { get { return this.GetTable<User>(); } }
+		public ITable<Vendor>       Vendors        { get { return this.GetTable<Vendor>(); } }
+
 		public MainDB()
 			: base("MainDb")
 		{
@@ -32,5 +41,182 @@ namespace IdeaMarket.DataModel
 		}
 
 		partial void InitDataContext();
+	}
+
+	[Table(Schema="dbo", Name="category")]
+	public partial class Category
+	{
+		[Column("id"),    PrimaryKey, Identity] public int    ID    { get; set; } // integer
+		[Column("value"), NotNull             ] public string Value { get; set; } // character varying(50)
+
+		#region Associations
+
+		/// <summary>
+		/// fk__idea_category__category_BackReference
+		/// </summary>
+		[Association(ThisKey="ID", OtherKey="CategoryId", CanBeNull=true, IsBackReference=true)]
+		public IEnumerable<IdeaCategory> IdeaCategories { get; set; }
+
+		#endregion
+	}
+
+	[Table(Schema="dbo", Name="file")]
+	public partial class File
+	{
+		[Column("id"),      PrimaryKey, Identity] public int    ID      { get; set; } // integer
+		[Column("name"),    NotNull             ] public string Name    { get; set; } // character varying(50)
+		[Column("content"), NotNull             ] public byte[] Content { get; set; } // bytea
+
+		#region Associations
+
+		/// <summary>
+		/// fk__idea_file__file_BackReference
+		/// </summary>
+		[Association(ThisKey="ID", OtherKey="FileId", CanBeNull=true, IsBackReference=true)]
+		public IEnumerable<IdeaFile> IdeaFiles { get; set; }
+
+		#endregion
+	}
+
+	[Table(Schema="dbo", Name="idea")]
+	public partial class Idea
+	{
+		[Column("id"),                PrimaryKey, Identity] public int    ID               { get; set; } // integer
+		[Column("owner_id"),          NotNull             ] public int    OwnerId          { get; set; } // integer
+		[Column("name"),              NotNull             ] public string Name             { get; set; } // character varying(50)
+		[Column("short_description"), NotNull             ] public string ShortDescription { get; set; } // character varying(1000)
+		[Column("full_description"),  NotNull             ] public string FullDescription  { get; set; } // character varying
+
+		#region Associations
+
+		/// <summary>
+		/// fk__idea_category__idea_BackReference
+		/// </summary>
+		[Association(ThisKey="ID", OtherKey="IdeaId", CanBeNull=true, IsBackReference=true)]
+		public IEnumerable<IdeaCategory> IdeaCategories { get; set; }
+
+		/// <summary>
+		/// fk__idea_file__idea_BackReference
+		/// </summary>
+		[Association(ThisKey="ID", OtherKey="IdeaId", CanBeNull=true, IsBackReference=true)]
+		public IEnumerable<IdeaFile> IdeaFiles { get; set; }
+
+		#endregion
+	}
+
+	[Table(Schema="dbo", Name="idea_category")]
+	public partial class IdeaCategory
+	{
+		[Column("idea_id"),     NotNull] public int IdeaId     { get; set; } // integer
+		[Column("category_id"), NotNull] public int CategoryId { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// fk__idea_category__idea
+		/// </summary>
+		[Association(ThisKey="IdeaId", OtherKey="ID", CanBeNull=false, KeyName="fk__idea_category__idea", BackReferenceName="IdeaCategories")]
+		public Idea Idea { get; set; }
+
+		/// <summary>
+		/// fk__idea_category__category
+		/// </summary>
+		[Association(ThisKey="CategoryId", OtherKey="ID", CanBeNull=false, KeyName="fk__idea_category__category", BackReferenceName="IdeaCategories")]
+		public Category Category { get; set; }
+
+		#endregion
+	}
+
+	[Table(Schema="dbo", Name="idea_file")]
+	public partial class IdeaFile
+	{
+		[Column("idea_id"), NotNull] public int IdeaId { get; set; } // integer
+		[Column("file_id"), NotNull] public int FileId { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// fk__idea_file__idea
+		/// </summary>
+		[Association(ThisKey="IdeaId", OtherKey="ID", CanBeNull=false, KeyName="fk__idea_file__idea", BackReferenceName="IdeaFiles")]
+		public Idea Idea { get; set; }
+
+		/// <summary>
+		/// fk__idea_file__file
+		/// </summary>
+		[Association(ThisKey="FileId", OtherKey="ID", CanBeNull=false, KeyName="fk__idea_file__file", BackReferenceName="IdeaFiles")]
+		public File File { get; set; }
+
+		#endregion
+	}
+
+	[Table(Schema="dbo", Name="user")]
+	public partial class User
+	{
+		[Column("id"),       PrimaryKey, Identity] public int    ID       { get; set; } // integer
+		[Column("email"),    NotNull             ] public string Email    { get; set; } // character varying(50)
+		[Column("login"),    NotNull             ] public string Login    { get; set; } // character varying(50)
+		[Column("password"), NotNull             ] public string Password { get; set; } // character varying(50)
+
+		#region Associations
+
+		/// <summary>
+		/// fk__vendor__user_BackReference
+		/// </summary>
+		[Association(ThisKey="ID", OtherKey="UserId", CanBeNull=true, IsBackReference=true)]
+		public IEnumerable<Vendor> Vendors { get; set; }
+
+		#endregion
+	}
+
+	[Table(Schema="dbo", Name="vendor")]
+	public partial class Vendor
+	{
+		[Column("id"),                PrimaryKey,  Identity] public int    ID               { get; set; } // integer
+		[Column("user_id"),           NotNull              ] public int    UserId           { get; set; } // integer
+		[Column("short_description"),    Nullable          ] public string ShortDescription { get; set; } // character varying(1000)
+
+		#region Associations
+
+		/// <summary>
+		/// fk__vendor__user
+		/// </summary>
+		[Association(ThisKey="UserId", OtherKey="ID", CanBeNull=false, KeyName="fk__vendor__user", BackReferenceName="Vendors")]
+		public User User { get; set; }
+
+		#endregion
+	}
+
+	public static partial class TableExtensions
+	{
+		public static Category Find(this ITable<Category> table, int ID)
+		{
+			return table.FirstOrDefault(t =>
+				t.ID == ID);
+		}
+
+		public static File Find(this ITable<File> table, int ID)
+		{
+			return table.FirstOrDefault(t =>
+				t.ID == ID);
+		}
+
+		public static Idea Find(this ITable<Idea> table, int ID)
+		{
+			return table.FirstOrDefault(t =>
+				t.ID == ID);
+		}
+
+		public static User Find(this ITable<User> table, int ID)
+		{
+			return table.FirstOrDefault(t =>
+				t.ID == ID);
+		}
+
+		public static Vendor Find(this ITable<Vendor> table, int ID)
+		{
+			return table.FirstOrDefault(t =>
+				t.ID == ID);
+		}
 	}
 }
