@@ -1,4 +1,6 @@
-﻿@{
+﻿@model List<IdeaMarket.Models.IdeaShortInfo>
+@using IdeaMarket.Logic
+@{
     ViewBag.Title = "Мои идеи";
 }
 
@@ -7,7 +9,7 @@
 <div class="container-fluid">
     <div class="panel panel-default">
         <div class="panel-heading">
-            Мои идеи
+            @Html.ActionLink( "Новая идея!", "NewIdea", new { }, new { @class = "btn btn-xs btn-success", role = "button" } )
         </div>
         <div class="table-responsive">
             <table class="table table-hover table-sortable">
@@ -22,32 +24,88 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Lorem Ipsum</td>
-                        <td>IT, Авто</td>
-                        <td>4к слов, 6 вложений</td>
-                        <td class="text-success">+16.3</td>
-                        <td class="text-success">Опубликована</td>
-                        <td>@Html.ActionLink( "Ред.", "EditIdea" )</td>
-                    </tr>
-                    <tr>
-                        <td>Dolor sit amet</td>
-                        <td>IT, Религия</td>
-                        <td>99к слов, 166 вложений</td>
-                        <td class="text-danger">-1.9</td>
-                        <td class="text-warning">Черновик</td>
-                        <td>@Html.ActionLink( "Ред.", "EditIdea" )</td>
-                    </tr>
-                    <tr>
-                        <td>Aliquam nulla ex, luctus sed lorem quis</td>
-                        <td>Космос, Медицина, Пузожители</td>
-                        <td>2к слов, 0 вложений</td>
-                        <td>0</td>
-                        <td class="text-danger">Не допущена</td>
-                        <td>@Html.ActionLink( "Ред.", "EditIdea" )</td>
-                    </tr>
+                    @foreach( var idea in Model )
+                    {
+                        string ratingColor = "";
+                        if( idea.Rating > 0 )
+                        {
+                            ratingColor = "text-success";
+                        }
+                        if( idea.Rating < 0 )
+                        {
+                            ratingColor = "text-danger";
+                        }
+
+                        string statusColor = "";
+                        switch( idea.Status )
+                        {
+                            case IdeaMarket.DataModel.IdeaStatus.Draft:
+                            case IdeaMarket.DataModel.IdeaStatus.WaitsForApproval:
+                                statusColor = "text-warning";
+                                break;
+                            case IdeaMarket.DataModel.IdeaStatus.Published:
+                                statusColor = "text-success";
+                                break;
+                            case IdeaMarket.DataModel.IdeaStatus.Rejected:
+                                statusColor = "text-danger";
+                                break;
+                        }
+                        <tr>
+                            <td>@idea.Name</td>
+                            <td>@string.Join( ", ", idea.Categories.Select( i => i.GetDisplayName() ) )</td>
+                            <td>@idea.Volume</td>
+                            <td class="@ratingColor">@idea.Rating.ToString( "+0.00;-0.00;0.00" )</td>
+                            <td class="@statusColor">@idea.Status.GetDisplayName()</td>
+                            <td class="text-right">
+                                <div class="btn-group" role="group">
+                                    <a href="#" role="button" class="btn btn-xs btn-default" data-toggle="modal" data-target="#sendModal">
+                                        <span class="glyphicon glyphicon-envelope"></span>
+                                    </a>
+                                    <a href="@Url.Action( "EditIdea", new { id = idea.Id } )" role="button" class="btn btn-xs btn-default">
+                                        <span class="glyphicon glyphicon-pencil"></span>
+                                    </a>
+                                    <a href="#" role="button" class="btn btn-xs btn-danger" data-toggle="modal" data-target="#deleteModal" onclick="$('#delIdeaId').val(@idea.Id)">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                Вы действительно хотите удалить идею?
+            </div>
+            <div class="modal-footer">
+                @using( Html.BeginForm( "DeleteIdea", "Vendor", FormMethod.Post ) )
+                {
+                    <input type="hidden" name="id" id="delIdeaId" />
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
+                }
+            </div>
+        </div>
+    </div>
+</div><!-- Modal -->
+<div class="modal fade" id="sendModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h4>Отправить идею покупателю</h4>
+                <input class="form-control" placeholder="Логин адресата" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Отмена</button>
+                <button type="submit" class="btn btn-sm btn-primary">Отправить</button>
+            </div>
         </div>
     </div>
 </div>

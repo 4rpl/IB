@@ -10,20 +10,14 @@
 <div class="container-fluid">
     <div class="panel panel-default">
         <div class="panel-heading">
-            Редактировать идею
+            Новая идея
         </div>
         <div class="panel-body">
-            @using( Html.BeginForm( "EditIdea", "Vendor", FormMethod.Post, new { enctype = "multipart/form-data" } ) )
+            @using( Html.BeginForm( "NewIdea", "Vendor", FormMethod.Post, new { enctype = "multipart/form-data" } ) )
             {
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-10 col-md-offset-1">
-                            @if( Model.Status == IdeaStatus.Published )
-                            {
-                                <div class="alert alert-danger">
-                                    Внимание! После подтверждения изменений идея перейдёт в статус "Ожидает модерации"
-                                </div>
-                            }
                             <div class="form-group-sm">
                                 @Html.LabelFor( m => m.Name ):
                                 @Html.TextBoxFor( m => m.Name, new { @class = "form-control", required = true } )
@@ -70,18 +64,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group-sm">
-                                <div class="row">
-                                    @foreach( var file in Model.IdeaFiles.Select( i => i.File ) )
-                                    {
-                                        <div class="col-md-6">
-                                            <input type="checkbox" checked name="files" value="@file.ID" />
-                                            @Html.ActionLink( (string)file.Name, "File", new { id = file.ID }, new { target = "_blank" } )
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                            <div class="form-group-sm">
+                            <div class="form-group-xs">
                                 @Html.CheckBox( "publish" )
                                 <label for="publish">Отправить на модерацию?</label>
                             </div>
