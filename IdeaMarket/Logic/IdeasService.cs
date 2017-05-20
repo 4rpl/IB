@@ -20,7 +20,8 @@ namespace IdeaMarket.Logic
                         Name = i.Name,
                         Rating = i.Rating,
                         Status = i.Status,
-                        Volume = $"{i.FullDescription.Split( ' ' ).Length} слов, {i.IdeaFiles.Count()} вложений"
+                        Volume = $"{i.FullDescription.Split( ' ' ).Length} слов, {i.IdeaFiles.Count()} вложений",
+                        Cost = i.Cost
                     } ).OrderBy( i => i.Name );
                 var items = q.ToList();
                 foreach( var item in items )

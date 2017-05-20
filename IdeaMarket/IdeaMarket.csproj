@@ -222,6 +222,7 @@
     <Content Include="Views\Vendor\Comments.cshtml" />
     <Content Include="Views\Vendor\NewIdea.cshtml" />
     <Content Include="Views\Vendor\UserProfile.cshtml" />
+    <Content Include="Views\Vendor\Purse.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

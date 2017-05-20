@@ -17,5 +17,6 @@ namespace IdeaMarket.Models
         public string Volume { get; set; }
         public IdeaStatus Status { get; set; }
         public double Rating { get; set; }
+        public double? Cost { get; set; }
     }
 }

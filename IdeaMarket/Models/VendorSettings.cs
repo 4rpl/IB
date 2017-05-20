@@ -13,7 +13,7 @@ namespace IdeaMarket.Models
         public string Description { get; set; }
         public string Status { get; set; }
         public Visibility Visibility { get; set; }
-        public List<Category> Categories { get; set; }
+        public IEnumerable<Category> Categories { get; set; }
         public string Email { get; set; }
         public string NewPassword { get; set; }
         public string OldPassword { get; set; }

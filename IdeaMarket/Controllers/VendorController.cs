@@ -54,6 +54,7 @@ namespace IdeaMarket.Controllers
                         Name = i.Name
                     }
                 } );
+                idea.Categories = db.IdeaCategories.Where( i => i.IdeaId == id ).ToList();
 
                 return View( idea );
             }
@@ -237,30 +238,67 @@ namespace IdeaMarket.Controllers
         [HttpGet]
         public ActionResult Settings()
         {
+            var id = 1;
             using( var db = new MainDB() )
             {
-                var vendor = db.Vendors
+                var settings = db.Vendors
                     .LoadWith( i => i.User )
-                    .LoadWith( i => i.Categories )
-                    .Where( i => i.ID == 1 )
+                    .Where( i => i.ID == id )
                     .Select( i => new VendorSettings
                     {
                         Login = i.User.Login,
                         Description = i.ShortDescription,
-                        Name = "asd",
+                        Name = i.User.Name,
                         Email = i.User.Email,
-                        Visibility = i.User.Visibility,
-                        Categories = i.Categories
+                        Visibility = i.User.Visibility
                     } )
                     .FirstOrDefault();
-                return View( vendor );
+                settings.Categories = db.VendorCategories
+                    .Where( i => i.VendorId == id )
+                    .Select( i => i.Category )
+                    .ToList();
+                return View( settings );
             }
         }
 
         [HttpPost]
-        public ActionResult Settings( object settings )
+        public ActionResult Settings( VendorSettings settings )
         {
-            return View();
+            var id = 1;
+            using( var db = new MainDB() )
+            {
+                if( db.Users.Where( i => i.ID == id ).FirstOrDefault()?.Password == settings.OldPassword )
+                {
+                    db.Users
+                        .Where( i => i.ID == id )
+                        .Set( i => i.Visibility, settings.Visibility )
+                        .Set( i => i.Password, settings.NewPassword )
+                        .Update();
+                    db.Vendors
+                        .Where( i => i.ID == id )
+                        .Set( i => i.ShortDescription, settings.Description )
+                        .Update();
+                    db.VendorCategories
+                        .Where( i => i.VendorId == id )
+                        .Delete();
+                    foreach( var cat in settings.Categories )
+                    {
+                        db.VendorCategories.Insert( () => new VendorCategory
+                        {
+                            VendorId = id,
+                            Category = cat
+                        } );
+                    }
+                    return RedirectToAction( "Profile" );
+                }
+                else
+                {
+                    settings.NewPassword = "";
+                    settings.OldPassword = "";
+                    ViewBag.WrongPassword = "Введён неверный пароль";
+                    return View( settings );
+                }
+            }
         }
 
         [HttpGet]
@@ -279,6 +317,12 @@ namespace IdeaMarket.Controllers
                     .FirstOrDefault();
                 return File( file.Content, file.ContentType );
             }
+        }
+
+        [HttpGet]
+        public ActionResult Purse()
+        {
+            return View();
         }
     }
 }

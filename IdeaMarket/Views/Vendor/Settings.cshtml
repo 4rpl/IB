@@ -1,5 +1,6 @@
 ﻿@model IdeaMarket.Models.VendorSettings
 @using IdeaMarket.DataModel
+@using IdeaMarket.Logic
 @{
     ViewBag.Title = "Профиль";
 }
@@ -22,28 +23,37 @@
                         </div>
                         <div class="form-group-sm">
                             @Html.LabelFor( m => m.Visibility, "Видимость" )
+                            <span class="h5"><small>Пользователи, которые смогут видеть Вас в списке продавцов</small></span>
                             <div class="container-fluid">
                                 @foreach( Visibility vis in Enum.GetValues( typeof( Visibility ) ) )
                                 {
-                                    <div class="col-md-12">
-                                        <label>
-                                            @Html.RadioButton( "Visibility", Model.Visibility == vis, new { value = vis } ) @vis
-                                        </label>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label>
+                                                @Html.RadioButton( "Visibility", vis, Model.Visibility == vis, new { value = vis } )
+                                                @vis.GetDisplayName()
+                                            </label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            @if( vis == Visibility.Somebody )
+                                            {
+                                                @Html.TextBox( "PeopleWhoCanSee", "", new { @class = "form-control", placeholder = "Логины, через запятую" } )
+                                            }
+                                        </div>
                                     </div>
                                 }
-                                <div class="col-md-12">
-                                    @Html.TextBox( "PeopleWhoCanSee", "", new { @class = "form-control", placeholder = "Логины, через запятую" } )
-                                </div>
                             </div>
                         </div>
                         <div class="form-group-sm">
                             @Html.LabelFor( m => m.Categories, "Категории" )
+                            <span class="h5"><small>Категории, которыми Вы занимаетесь</small></span>
                             <div class="container-fluid">
                                 @foreach( Category cat in Enum.GetValues( typeof( Category ) ) )
                                 {
                                     <div class="col-md-6">
                                         <label>
-                                            @Html.CheckBox( "Categories", Model.Categories.Contains( cat ), new { value = cat } ) @cat
+                                            @Html.CheckBox( "Categories", Model.Categories.Contains( cat ), new { value = cat } )
+                                            @cat.GetDisplayName()
                                         </label>
                                     </div>
                                 }
@@ -56,16 +66,14 @@
                                     <div class="col-md-4">
                                         @Html.TextBoxFor( m => m.NewPassword, new { @class = "form-control", type = "password", placeholder = "Новый пароль" } )
                                     </div>
-                                    <div class="col-md-8 text-danger">
-                                        Пароль слишком короткий (минимум 6 символов)
+                                    <div id="NewPasswordAlert" class="col-md-8 text-danger">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4">
                                         @Html.TextBox( "Confirm", "", new { @class = "form-control", type = "password", placeholder = "Подтверждение" } )
                                     </div>
-                                    <div class="col-md-8 text-danger">
-                                        Введённые пароли не совпадают
+                                    <div id="ConfirmAlert" class="col-md-8 text-danger">
                                     </div>
                                 </div>
                             </div>
@@ -93,5 +101,6 @@
 </div>
 
 <script>
-    Vendor.sidebar('@Url.Action( "Settings" )')
+    Vendor.sidebar('@Url.Action( "Settings" )');
+    Vendor.checkPassword();
 </script>

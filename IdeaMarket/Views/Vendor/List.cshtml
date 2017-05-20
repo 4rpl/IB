@@ -19,7 +19,8 @@
                         <th>Категории</th>
                         <th><a href="#" onclick="Project.Common.sortTable($('.table-sortable'), 2)">Объем</a></th>
                         <th><a href="#" onclick="Project.Common.sortTable($('.table-sortable'), 3)">Рейтинг</a></th>
-                        <th><a href="#" onclick="Project.Common.sortTable($('.table-sortable'), 4)">Статус</a></th>
+                        <th><a href="#" onclick="Project.Common.sortTable($('.table-sortable'), 4)">Стоимость</a></th>
+                        <th><a href="#" onclick="Project.Common.sortTable($('.table-sortable'), 5)">Статус</a></th>
                         <th> </th>
                     </tr>
                 </thead>
@@ -55,6 +56,7 @@
                             <td>@string.Join( ", ", idea.Categories.Select( i => i.GetDisplayName() ) )</td>
                             <td>@idea.Volume</td>
                             <td class="@ratingColor">@idea.Rating.ToString( "+0.00;-0.00;0.00" )</td>
+                            <td>@(idea.Cost?.ToString( "0.00" ) + "р.")</td>
                             <td class="@statusColor">@idea.Status.GetDisplayName()</td>
                             <td class="text-right">
                                 <div class="btn-group" role="group">

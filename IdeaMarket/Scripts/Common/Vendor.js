@@ -22,3 +22,22 @@ Vendor.calculateWorth = function () {
         $('.worthTip').text(words + ' слов, малый объем. Рекомендуемая цена - до 5000 руб.');
     }
 }
+
+Vendor.checkPassword = function () {
+    let newPassword = $('#NewPassword');
+    let confirmation = $('#Confirm');
+    let passCheck = function () {
+        if (newPassword.val().length < 6) {
+            $('#NewPasswordAlert').text('Пароль слишком короткий (минимум 6 символов)');
+            return;
+        }
+        $('#NewPasswordAlert').text('');
+        if (newPassword.val() !== confirmation.val()) {
+            $('#ConfirmAlert').text('Введённые пароли не совпадают');
+            return;
+        }
+        $('#ConfirmAlert').text('');
+    }
+    newPassword.on('input', passCheck);
+    confirmation.on('input', passCheck);
+}

@@ -1,0 +1,73 @@
+﻿@using IdeaMarket.Logic
+@{
+    ViewBag.Title = "Кошелёк";
+}
+
+@Html.Partial( "Sidebar" )
+
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Кошелёк
+        </div>
+        <div class="panel-body">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span class="h4">Мои средства: </span><span class="h2">54<small>.00</small> USD</span>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <button class="btn btn-success">Вывести средства</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-condensed table-sortable">
+                <thead>
+                    <tr>
+                        <th><a href="#" onclick="Project.Common.sortTable($('.table-sortable'), 0)">№<span class="glyphicon glyphicon-sort-by-alphabet"></span></a></th>
+                        <th><a href="#" onclick="Project.Common.sortTable($('.table-sortable'), 1)">Название</a></th>
+                        <th>Категории</th>
+                        <th><a href="#" onclick="Project.Common.sortTable($('.table-sortable'), 3)">Стоимость</a></th>
+                        <th><a href="#" onclick="Project.Common.sortTable($('.table-sortable'), 4)">Покупатель</a></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Идея 1</td>
+                        <td>Автомобили</td>
+                        <td>12.00 USD</td>
+                        <td><a href="#">Вася</a></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Идея 2</td>
+                        <td>Массовое обслуживание</td>
+                        <td>15.00 USD</td>
+                        <td><a href="#">Петя</a></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Идея 3</td>
+                        <td>Реклама</td>
+                        <td>14.00 USD</td>
+                        <td><a href="#">Вова</a></td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Идея 4</td>
+                        <td>IT</td>
+                        <td>13.00 USD</td>
+                        <td><a href="#">Дима</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    Vendor.sidebar('@Url.Action( "Purse", controllerName: "Vendor" )');
+</script>

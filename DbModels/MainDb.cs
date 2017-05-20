@@ -20,6 +20,7 @@ namespace IdeaMarket.DataModel
         public ITable<IdeaFile> IdeaFiles { get { return this.GetTable<IdeaFile>(); } }
         public ITable<User> Users { get { return this.GetTable<User>(); } }
         public ITable<Vendor> Vendors { get { return this.GetTable<Vendor>(); } }
+        public ITable<VendorCategory> VendorCategories { get { return this.GetTable<VendorCategory>(); } }
 
         public MainDB()
             : base( "MainDb" )
@@ -180,6 +181,7 @@ namespace IdeaMarket.DataModel
     public partial class User
     {
         [Column( "id" ), PrimaryKey, Identity] public int ID { get; set; } // integer
+        [Column( "name" ), NotNull] public string Name { get; set; } // character varying(50)
         [Column( "email" ), NotNull] public string Email { get; set; } // character varying(50)
         [Column( "login" ), NotNull] public string Login { get; set; } // character varying(50)
         [Column( "password" ), NotNull] public string Password { get; set; } // character varying(50)
@@ -202,7 +204,7 @@ namespace IdeaMarket.DataModel
         public User User { get; set; }
 
         [Association( ThisKey = "ID", OtherKey = "VendorId", CanBeNull = true, IsBackReference = false )]
-        public IEnumerable<VendorCategory> Categories { get; set; }
+        public List<VendorCategory> Categories { get; set; }
 
         #endregion
     }

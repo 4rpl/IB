@@ -25,22 +25,22 @@
                                 </div>
                             }
                             <div class="form-group-sm">
-                                @Html.LabelFor( m => m.Name ):
+                                @Html.LabelFor( m => m.Name, "Название" ):
                                 @Html.TextBoxFor( m => m.Name, new { @class = "form-control", required = true } )
                             </div>
                             <div class="form-group-sm">
-                                @Html.LabelFor( m => m.ShortDescription ):
+                                @Html.LabelFor( m => m.ShortDescription, "Краткое описание" ):
                                 @Html.TextAreaFor( m => m.ShortDescription, new { @class = "form-control" } )
                             </div>
                             <div class="form-group-sm">
-                                @Html.LabelFor( m => m.FullDescription ):
+                                @Html.LabelFor( m => m.FullDescription, "Полное описание" ):
                                 @Html.TextAreaFor( m => m.FullDescription, new { @class = "form-control", oninput = "Vendor.calculateWorth()" } )
                                 <p class="worthTip small"></p>
                             </div>
                             <div class="form-group-sm">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        @Html.LabelFor( m => m.Cost ):
+                                        @Html.LabelFor( m => m.Cost, "Стоимость" ):
                                         <div class="input-group">
                                             <div class="input-group-addon">$</div>
                                             @Html.TextBoxFor( m => m.Cost, new { @class = "form-control" } )
@@ -53,12 +53,25 @@
                                 <div class="row">
                                     @foreach( Category cat in Enum.GetValues( typeof( Category ) ) )
                                     {
-                                        <div class="col-md-4">
-                                            <label>
-                                                <input type="checkbox" name="categories" value="@cat" />
-                                                @cat.GetDisplayName()
-                                            </label>
-                                        </div>
+                                        var ch = Model.Categories.Select( i => i.Category ).Contains( cat );
+                                        if( ch )
+                                        {
+                                            <div class="col-md-4">
+                                                <label>
+                                                    <input type="checkbox" name="categories" value="@cat" checked />
+                                                    @cat.GetDisplayName()
+                                                </label>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="col-md-4">
+                                                <label>
+                                                    <input type="checkbox" name="categories" value="@cat" />
+                                                    @cat.GetDisplayName()
+                                                </label>
+                                            </div>
+                                        }
                                     }
                                 </div>
                             </div>
@@ -82,7 +95,7 @@
                                 </div>
                             </div>
                             <div class="form-group-sm">
-                                @Html.CheckBox( "publish" )
+                                @Html.CheckBox( "publish", Model.Status == IdeaStatus.Published || Model.Status == IdeaStatus.WaitsForApproval )
                                 <label for="publish">Отправить на модерацию?</label>
                             </div>
                         </div>
