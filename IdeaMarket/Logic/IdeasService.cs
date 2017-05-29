@@ -7,13 +7,18 @@ using System.Web;
 
 namespace IdeaMarket.Logic
 {
+    /// <summary>
+    /// Сервис доступа к идеям
+    /// </summary>
     public static class IdeasService
     {
-        public static List<IdeaShortInfo> GetIdeasList()
+        // TODO: по-хорошему, нужно вынести сюда всю работу с бд из контроллера
+        public static List<IdeaShortInfo> GetIdeasList( int userId )
         {
             using( var db = new MainDB() )
             {
                 var q = db.Ideas
+                    .Where( i => i.OwnerId == userId )
                     .Select( i => new IdeaShortInfo
                     {
                         Id = i.ID,

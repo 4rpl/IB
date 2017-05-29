@@ -1,4 +1,6 @@
-﻿var Vendor = Vendor || {}
+﻿// набор скриптов для страниц продавца
+
+var Vendor = Vendor || {}
 
 Vendor.sidebar = function (curPage) {
     let lis = $('.sidebar li');

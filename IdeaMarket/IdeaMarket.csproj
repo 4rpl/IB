@@ -153,14 +153,19 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\VendorController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Logic\AuthService.cs" />
     <Compile Include="Logic\EnumExtentions.cs" />
     <Compile Include="Logic\IdeasService.cs" />
+    <Compile Include="Models\BuyerModel.cs" />
     <Compile Include="Models\IdeaShortInfo.cs" />
+    <Compile Include="Models\LoginModel.cs" />
+    <Compile Include="Models\RegistrationModel.cs" />
     <Compile Include="Models\VendorSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -212,20 +217,21 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Vendor\List.cshtml" />
     <Content Include="Views\Vendor\EditIdea.cshtml" />
     <Content Include="Views\Vendor\Sidebar.cshtml" />
     <Content Include="Views\Vendor\Settings.cshtml" />
     <Content Include="Views\Vendor\Comments.cshtml" />
     <Content Include="Views\Vendor\NewIdea.cshtml" />
-    <Content Include="Views\Vendor\UserProfile.cshtml" />
+    <Content Include="Views\Vendor\Profile.cshtml" />
     <Content Include="Views\Vendor\Purse.cshtml" />
+    <Content Include="Views\Vendor\Buyers.cshtml" />
+    <Content Include="Views\Home\Login.cshtml" />
+    <Content Include="Views\Home\Register.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

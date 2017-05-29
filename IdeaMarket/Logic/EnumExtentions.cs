@@ -11,6 +11,8 @@ namespace IdeaMarket.Logic
     {
         public static string GetDisplayName( this Enum enumValue )
         {
+            // Получить значение DisplayAttribute.Name
+            // Нужно для вьюхъ
             return enumValue.GetType()
                             .GetMember( enumValue.ToString() )
                             .First()

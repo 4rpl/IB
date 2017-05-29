@@ -1,0 +1,47 @@
+﻿@model IdeaMarket.Models.LoginModel
+@{
+    ViewBag.Title = "Вход";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Вход
+                </div>
+                <div class="panel-body">
+                    @using( Html.BeginForm( "Login", "Home", FormMethod.Post, new { @class = "form-group-sm" } ) )
+                    {
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-4 text-right">
+                                    @Html.LabelFor( i => i.Login, "Логин" )
+                                </div>
+                                <div class="col-md-6">
+                                    @Html.TextBoxFor( i => i.Login, new { @class = "form-control" } )
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 text-right">
+                                    @Html.LabelFor( i => i.Password, "Пароль" )
+                                </div>
+                                <div class="col-md-6">
+                                    @Html.TextBoxFor( i => i.Password, new { @class = "form-control", type = "password" } )
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-10 text-right">
+                                    <input type="submit" class="btn btn-success" value="Войти" />
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <a href="@Url.Action( "Register" )">Ещё не зарегистрированы?</a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -10,30 +10,53 @@ using System.Web.Mvc;
 
 namespace IdeaMarket.Controllers
 {
-    public class VendorController : Controller
+    /// <summary>
+    /// Контроллер с действиями для продавца
+    /// </summary>
+    public class VendorController : BaseController
     {
         public ActionResult Index()
         {
             return RedirectToAction( "List" );
         }
 
+        /// <summary>
+        /// Список идей
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult List()
         {
-            using( var db = new MainDB() )
+            if( !UserId.HasValue )
             {
-                var ideas = IdeasService.GetIdeasList();
-                return View( ideas );
+                return RedirectToAction( "Login", "Home" );
+            }
+            else
+            {
+                using( var db = new MainDB() )
+                {
+                    var ideas = IdeasService.GetIdeasList( UserId.Value );
+                    return View( ideas );
+                }
             }
         }
 
+        /// <summary>
+        /// Редактировать идею
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult EditIdea( int id )
         {
+            if( !UserId.HasValue )
+            {
+                return RedirectToAction( "Login", "Home" );
+            }
             using (var db = new MainDB() )
             {
                 var idea = db.Ideas
-                    .Where( i => i.ID == id )
+                    .Where( i => i.ID == id && i.OwnerId == UserId.Value )
                     .FirstOrDefault();
                 if( idea == null )
                 {
@@ -60,11 +83,26 @@ namespace IdeaMarket.Controllers
             }
         }
 
+        /// <summary>
+        /// Редактировать идею
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult EditIdea( Idea idea, bool publish, List<Category> categories, List<int> files, List<HttpPostedFileBase> upload )
         {
+            if( !UserId.HasValue )
+            {
+                return RedirectToAction( "Login", "Home" );
+            }
+
             using( var db = new MainDB() )
             {
+                if( db.Ideas.Where( i => i.ID == idea.ID && i.OwnerId == UserId.Value ).Any() )
+                {
+                    return HttpNotFound();
+                }
+
                 var filesToDelete = db.IdeaFiles
                     .Where( i => !files.Contains( i.FileId ) && i.IdeaId == idea.ID )
                     .Select( i => i.FileId )
@@ -132,16 +170,38 @@ namespace IdeaMarket.Controllers
             return RedirectToAction( "List" );
         }
 
+        /// <summary>
+        /// Новая идея
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult NewIdea()
         {
+            if( !UserId.HasValue )
+            {
+                return RedirectToAction( "Login", "Home" );
+            }
+
             var idea = new Idea();
             return View( idea );
         }
 
+        /// <summary>
+        /// Новая идея
+        /// </summary>
+        /// <param name="idea"></param>
+        /// <param name="publish"></param>
+        /// <param name="categories"></param>
+        /// <param name="upload"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult NewIdea( Idea idea, bool publish, List<Category> categories, List<HttpPostedFileBase> upload )
         {
+            if( !UserId.HasValue )
+            {
+                return RedirectToAction( "Login", "Home" );
+            }
+
             using( var db = new MainDB() )
             {
                 if( publish )
@@ -198,11 +258,26 @@ namespace IdeaMarket.Controllers
             return RedirectToAction( "List" );
         }
 
+        /// <summary>
+        /// Удалить идею
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult DeleteIdea( int id )
         {
+            if( !UserId.HasValue )
+            {
+                return RedirectToAction( "Login", "Home" );
+            }
+
             using( var db = new MainDB() )
             {
+                if( db.Ideas.Where( i => i.ID == id && i.OwnerId == UserId.Value ).Any() )
+                {
+                    return HttpNotFound();
+                }
+
                 var fileIds = db.IdeaFiles.Where( i => i.IdeaId == id ).Select( i => i.FileId ).ToList();
                 db.Files.Delete( i => fileIds.Contains( i.ID ) );
                 db.IdeaFiles.Delete( i => i.IdeaId == id );
@@ -212,38 +287,22 @@ namespace IdeaMarket.Controllers
             return RedirectToAction( "List" );
         }
 
+        /// <summary>
+        /// Страница профиля
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
-        public ActionResult UserProfile()
+        public ActionResult Profile()
         {
-            using( var db = new MainDB() )
+            if( !UserId.HasValue )
             {
-                var vendor = db.Vendors
-                    .LoadWith( i => i.User )
-                    .LoadWith( i => i.Categories )
-                    .Where( i => i.ID == 1 )
-                    .Select( i => new VendorSettings
-                    {
-                        Login = i.User.Login,
-                        Description = i.ShortDescription,
-                        Name = "asd",
-                        Email = i.User.Email,
-                        Visibility = i.User.Visibility,
-                        Categories = i.Categories.Select( j => j.Category ).ToList()
-                    } )
-                    .FirstOrDefault();
-                return View( vendor );
+                return RedirectToAction( "Login", "Home" );
             }
-        }
-
-        [HttpGet]
-        public ActionResult Settings()
-        {
-            var id = 1;
             using( var db = new MainDB() )
             {
                 var settings = db.Vendors
                     .LoadWith( i => i.User )
-                    .Where( i => i.ID == id )
+                    .Where( i => i.ID == UserId.Value )
                     .Select( i => new VendorSettings
                     {
                         Login = i.User.Login,
@@ -254,7 +313,40 @@ namespace IdeaMarket.Controllers
                     } )
                     .FirstOrDefault();
                 settings.Categories = db.VendorCategories
-                    .Where( i => i.VendorId == id )
+                    .Where( i => i.VendorId == UserId.Value )
+                    .Select( i => i.Category )
+                    .ToList();
+                return View( settings );
+            }
+        }
+
+        /// <summary>
+        /// Редактирование профиля
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult Settings()
+        {
+            if( !UserId.HasValue )
+            {
+                return RedirectToAction( "Login", "Home" );
+            }
+            using( var db = new MainDB() )
+            {
+                var settings = db.Vendors
+                    .LoadWith( i => i.User )
+                    .Where( i => i.ID == UserId.Value )
+                    .Select( i => new VendorSettings
+                    {
+                        Login = i.User.Login,
+                        Description = i.ShortDescription,
+                        Name = i.User.Name,
+                        Email = i.User.Email,
+                        Visibility = i.User.Visibility
+                    } )
+                    .FirstOrDefault();
+                settings.Categories = db.VendorCategories
+                    .Where( i => i.VendorId == UserId.Value )
                     .Select( i => i.Category )
                     .ToList();
                 return View( settings );
@@ -264,28 +356,41 @@ namespace IdeaMarket.Controllers
         [HttpPost]
         public ActionResult Settings( VendorSettings settings )
         {
-            var id = 1;
+            if( !UserId.HasValue )
+            {
+                return RedirectToAction( "Login", "Home" );
+            }
             using( var db = new MainDB() )
             {
-                if( db.Users.Where( i => i.ID == id ).FirstOrDefault()?.Password == settings.OldPassword )
+                if( db.Users.Where( i => i.ID == UserId.Value ).FirstOrDefault()?.Password == settings.OldPassword )
                 {
-                    db.Users
-                        .Where( i => i.ID == id )
-                        .Set( i => i.Visibility, settings.Visibility )
-                        .Set( i => i.Password, settings.NewPassword )
-                        .Update();
+                    if( string.IsNullOrWhiteSpace( settings.NewPassword ) )
+                    {
+                        db.Users
+                            .Where( i => i.ID == UserId.Value )
+                            .Set( i => i.Visibility, settings.Visibility )
+                            .Update();
+                    }
+                    else
+                    {
+                        db.Users
+                            .Where( i => i.ID == UserId.Value )
+                            .Set( i => i.Visibility, settings.Visibility )
+                            .Set( i => i.Password, settings.NewPassword )
+                            .Update();
+                    }
                     db.Vendors
-                        .Where( i => i.ID == id )
+                        .Where( i => i.ID == UserId.Value )
                         .Set( i => i.ShortDescription, settings.Description )
                         .Update();
                     db.VendorCategories
-                        .Where( i => i.VendorId == id )
+                        .Where( i => i.VendorId == UserId.Value )
                         .Delete();
                     foreach( var cat in settings.Categories )
                     {
                         db.VendorCategories.Insert( () => new VendorCategory
                         {
-                            VendorId = id,
+                            VendorId = UserId.Value,
                             Category = cat
                         } );
                     }
@@ -301,17 +406,86 @@ namespace IdeaMarket.Controllers
             }
         }
 
+        /// <summary>
+        /// Список покупателей
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult Buyers()
+        {
+            if( !UserId.HasValue )
+            {
+                return RedirectToAction( "Login", "Home" );
+            }
+            var buyers = new List<BuyerModel>
+            {
+                new BuyerModel
+                {
+                    Name = "Вася",
+                    Categories = new List<Category>
+                    {
+                        Category.Alcohol,
+                        Category.IT
+                    }
+                },
+                new BuyerModel
+                {
+                    Name = "Петя",
+                    Categories = new List<Category>
+                    {
+                        Category.Cosmos,
+                        Category.Medicine
+                    }
+                },
+                new BuyerModel
+                {
+                    Name = "Вова",
+                    Categories = new List<Category>
+                    {
+                        Category.Pozilivers
+                    }
+                },
+                new BuyerModel
+                {
+                    Name = "Дима",
+                    Categories = new List<Category>
+                    {
+                        Category.IT
+                    }
+                }
+            };
+            return View( buyers );
+        }
+
+        /// <summary>
+        /// Страница с отзывами
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult Comments()
         {
+            if( !UserId.HasValue )
+            {
+                return RedirectToAction( "Login", "Home" );
+            }
             return View();
         }
 
+        /// <summary>
+        /// Получить файл
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult File( int id )
         {
+            if( !UserId.HasValue )
+            {
+                return RedirectToAction( "Login", "Home" );
+            }
             using( var db = new MainDB() )
             {
+                // TODO: в настоящей системе нужна проверка пользователя, blah-blah-blah
                 var file = db.Files
                     .Where( i => i.ID == id )
                     .FirstOrDefault();
@@ -319,9 +493,17 @@ namespace IdeaMarket.Controllers
             }
         }
 
+        /// <summary>
+        /// Страница с кошельком
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult Purse()
         {
+            if( !UserId.HasValue )
+            {
+                return RedirectToAction( "Login", "Home" );
+            }
             return View();
         }
     }

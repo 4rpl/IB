@@ -1,4 +1,8 @@
-﻿using System;
+﻿using IdeaMarket.DataModel;
+using IdeaMarket.Logic;
+using IdeaMarket.Models;
+using LinqToDB;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -6,25 +10,61 @@ using System.Web.Mvc;
 
 namespace IdeaMarket.Controllers
 {
-    public class HomeController : Controller
+    /// <summary>
+    /// Контроллер с общими действиями
+    /// </summary>
+    public class HomeController : BaseController
     {
-        public ActionResult Index()
+        [HttpGet]
+        public ActionResult Register()
         {
-            return View();
+            return View( new RegistrationModel() );
+        }
+        
+        [HttpPost]
+        public ActionResult Register( RegistrationModel user )
+        {
+            using(var db = new MainDB() )
+            {
+                var id = (int)(long)db.Users.InsertWithIdentity( () => new User
+                {
+                    Login = user.Login,
+                    Name = user.Name,
+                    Password = user.Password,
+                    Email = user.Email
+                } );
+                Response.SetCookie( new HttpCookie( "token", AuthService.Login( id ) ) );
+                db.Vendors.Insert( () => new Vendor
+                {
+                    UserId = id
+                } );
+            }
+            return RedirectToAction( "Profile", "Vendor" );
         }
 
-        public ActionResult About()
+        [HttpGet]
+        public ActionResult Login()
         {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
+            return View( new LoginModel() );
         }
 
-        public ActionResult Contact()
+        [HttpPost]
+        public ActionResult Login( LoginModel user )
         {
-            ViewBag.Message = "Your contact page.";
+            using( var db = new MainDB() )
+            {
+                var userId = db.Users.Where( i => i.Login == user.Login && i.Password == user.Password ).Select( i => i.ID ).FirstOrDefault();
+                Response.SetCookie( new HttpCookie( "token", AuthService.Login( userId ) ) );
+                return RedirectToAction( "Profile", "Vendor" );
+            }
+        }
 
-            return View();
+        [HttpGet]
+        public ActionResult Logoff()
+        {
+            AuthService.Logoff( Request.Cookies["token"].Value );
+            Response.SetCookie( new HttpCookie( "token", "" ) );
+            return RedirectToAction( "Login" );
         }
     }
 }

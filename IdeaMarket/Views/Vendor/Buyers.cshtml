@@ -1,0 +1,44 @@
+﻿@model List<IdeaMarket.Models.BuyerModel>
+@using IdeaMarket.Logic
+@{
+    ViewBag.Title = "Покупатели";
+}
+
+@Html.Partial( "Sidebar" )
+
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Покупатели
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover table-sortable">
+                <thead>
+                    <tr>
+                        <th><a href="#" onclick="Project.Common.sortTable($('.table-sortable'), 0)">Имя <span class="glyphicon glyphicon-sort-by-alphabet"></span></a></th>
+                        <th>Предпочитаемые категории</th>
+                        <th> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach( var buyer in Model )
+                    {
+                        <tr>
+                            <td>@buyer.Name</td>
+                            <td>@string.Join( ", ", buyer.Categories.Select( i => i.GetDisplayName() ) )</td>
+                            <td class="text-right">
+                                <a href="#" role="button" class="btn btn-xs btn-default" data-toggle="modal" data-target="#sendModal">
+                                    <span class="glyphicon glyphicon-envelope"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    Vendor.sidebar('@Url.Action( "Buyers", controllerName: "Vendor" )');
+</script>

@@ -1,4 +1,6 @@
-﻿var Project = Project || {}
+﻿// набор общих скриптов сайта
+
+var Project = Project || {}
 Project.Common = Project.Common || {}
 
 Project.Common.sortTable = function (table, col) {

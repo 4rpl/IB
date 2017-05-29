@@ -13,94 +13,111 @@
             Настройки профиля продавца
         </div>
         <div class="panel-body">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-12">
-                        <h1>@Model.Name <small>@Model.Login</small></h1>
-                        <div class="form-group-sm">
-                            @Html.LabelFor( m => m.Description, "Описание" ):
-                            @Html.TextAreaFor( m => m.Description, new { @class = "form-control" } )
-                        </div>
-                        <div class="form-group-sm">
-                            @Html.LabelFor( m => m.Visibility, "Видимость" )
-                            <span class="h5"><small>Пользователи, которые смогут видеть Вас в списке продавцов</small></span>
-                            <div class="container-fluid">
-                                @foreach( Visibility vis in Enum.GetValues( typeof( Visibility ) ) )
-                                {
-                                    <div class="row">
-                                        <div class="col-md-2">
+            @using( Html.BeginForm() )
+            {
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1>@Model.Name <small>@Model.Login</small></h1>
+                            <div class="form-group-sm">
+                                @Html.LabelFor( m => m.Description, "Описание" ):
+                                @Html.TextAreaFor( m => m.Description, new { @class = "form-control" } )
+                            </div>
+                            <div class="form-group-sm">
+                                @Html.LabelFor( m => m.Visibility, "Видимость" )
+                                <span class="h5"><small>Пользователи, которые смогут видеть Вас в списке продавцов</small></span>
+                                <div class="container-fluid">
+                                    @foreach( Visibility vis in Enum.GetValues( typeof( Visibility ) ) )
+                                    {
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <label>
+                                                    @Html.RadioButton( "Visibility", vis, Model.Visibility == vis, new { value = vis } )
+                                                    @vis.GetDisplayName()
+                                                </label>
+                                            </div>
+                                            <div class="col-md-8">
+                                                @if( vis == Visibility.Somebody )
+                                                {
+                                                    @Html.TextBox( "PeopleWhoCanSee", "", new { @class = "form-control", placeholder = "Логины, через запятую" } )
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group-sm">
+                                @Html.LabelFor( m => m.Categories, "Категории" )
+                                <span class="h5"><small>Категории, которыми Вы занимаетесь</small></span>
+                                <div class="container-fluid">
+                                    @foreach( Category cat in Enum.GetValues( typeof( Category ) ) )
+                                    {
+                                        var ch = Model.Categories.Contains( cat );
+                                        <div class="col-md-6">
                                             <label>
-                                                @Html.RadioButton( "Visibility", vis, Model.Visibility == vis, new { value = vis } )
-                                                @vis.GetDisplayName()
+                                                @if( ch )
+                                                {
+                                                    <input type="checkbox" name="Categories" value="@cat" checked />
+                                                }
+                                                else
+                                                {
+                                                    <input type="checkbox" name="Categories" value="@cat" />
+                                                }
+                                                @cat.GetDisplayName()
                                             </label>
                                         </div>
-                                        <div class="col-md-8">
-                                            @if( vis == Visibility.Somebody )
-                                            {
-                                                @Html.TextBox( "PeopleWhoCanSee", "", new { @class = "form-control", placeholder = "Логины, через запятую" } )
-                                            }
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group-sm">
+                                @Html.LabelFor( m => m.NewPassword, "Изменить пароль" ):
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            @Html.TextBoxFor( m => m.NewPassword, new { @class = "form-control", type = "password", placeholder = "Новый пароль" } )
+                                        </div>
+                                        <div id="NewPasswordAlert" class="col-md-8 text-danger">
                                         </div>
                                     </div>
-                                }
-                            </div>
-                        </div>
-                        <div class="form-group-sm">
-                            @Html.LabelFor( m => m.Categories, "Категории" )
-                            <span class="h5"><small>Категории, которыми Вы занимаетесь</small></span>
-                            <div class="container-fluid">
-                                @foreach( Category cat in Enum.GetValues( typeof( Category ) ) )
-                                {
-                                    <div class="col-md-6">
-                                        <label>
-                                            @Html.CheckBox( "Categories", Model.Categories.Contains( cat ), new { value = cat } )
-                                            @cat.GetDisplayName()
-                                        </label>
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                        <div class="form-group-sm">
-                            @Html.LabelFor( m => m.NewPassword, "Новый пароль" ):
-                            <div class="container-fluid">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        @Html.TextBoxFor( m => m.NewPassword, new { @class = "form-control", type = "password", placeholder = "Новый пароль" } )
-                                    </div>
-                                    <div id="NewPasswordAlert" class="col-md-8 text-danger">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        @Html.TextBox( "Confirm", "", new { @class = "form-control", type = "password", placeholder = "Подтверждение" } )
-                                    </div>
-                                    <div id="ConfirmAlert" class="col-md-8 text-danger">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            @Html.TextBox( "Confirm", "", new { @class = "form-control", type = "password", placeholder = "Подтверждение" } )
+                                        </div>
+                                        <div id="ConfirmAlert" class="col-md-8 text-danger">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-group-sm">
-                            @Html.LabelFor( m => m.OldPassword, "Введите пароль для подтверждения изменений" )
-                            <div class="container-fluid">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        @Html.TextBoxFor( m => m.OldPassword, new { @class = "form-control", type = "password", placeholder = "Старый пароль" } )
+                            <div class="form-group-sm">
+                                @Html.LabelFor( m => m.OldPassword, "Введите пароль для подтверждения изменений" )
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            @Html.TextBoxFor( m => m.OldPassword, new { @class = "form-control", type = "password", placeholder = "Старый пароль" } )
+                                        </div>
+                                        <div class="col-md-8 text-danger">
+                                            @ViewBag.WrongPassword
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-group-sm">
-                            <div class="text-right">
-                                <input type="button" class="btn btn-success" value="Сохранить изменения" />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    @Html.ActionLink( "Назад", "Profile", new { }, new { @class = "btn btn-default", role = "button" } )
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <input type="submit" class="btn btn-success" value="Сохранить изменения" />
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            }
         </div>
     </div>
 </div>
 
 <script>
-    Vendor.sidebar('@Url.Action( "Settings" )');
+    Vendor.sidebar('@Url.Action( "Profile" )');
     Vendor.checkPassword();
 </script>

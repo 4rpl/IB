@@ -6,6 +6,9 @@ using System.Web;
 
 namespace IdeaMarket.Models
 {
+    /// <summary>
+    /// Модель настройки профиля продавца
+    /// </summary>
     public class VendorSettings
     {
         public string Name { get; set; }

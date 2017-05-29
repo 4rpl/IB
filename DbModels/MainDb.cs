@@ -37,7 +37,7 @@ namespace IdeaMarket.DataModel
         partial void InitDataContext();
     }
 
-    [Table( Schema = "dbo", Name = "file" )]
+    [Table( Schema = "public", Name = "file" )]
     public partial class File
     {
         [Column( "id" ), PrimaryKey, Identity] public int ID { get; set; } // integer
@@ -56,7 +56,7 @@ namespace IdeaMarket.DataModel
         #endregion
     }
 
-    [Table( Schema = "dbo", Name = "idea" )]
+    [Table( Schema = "public", Name = "idea" )]
     public partial class Idea
     {
         [Column( "id" ), PrimaryKey, Identity] public int ID { get; set; } // integer
@@ -123,7 +123,7 @@ namespace IdeaMarket.DataModel
         WaitsForApproval = 4
     }
 
-    [Table( Schema = "dbo", Name = "idea_category" )]
+    [Table( Schema = "public", Name = "idea_category" )]
     public partial class IdeaCategory
     {
         [Column( "idea_id" ), NotNull] public int IdeaId { get; set; } // integer
@@ -140,7 +140,7 @@ namespace IdeaMarket.DataModel
         #endregion
     }
 
-    [Table( Schema = "dbo", Name = "vendor_category" )]
+    [Table( Schema = "public", Name = "vendor_category" )]
     public partial class VendorCategory
     {
         [Column( "vendor_id" ), NotNull] public int VendorId { get; set; } // integer
@@ -154,7 +154,7 @@ namespace IdeaMarket.DataModel
         #endregion
     }
 
-    [Table( Schema = "dbo", Name = "idea_file" )]
+    [Table( Schema = "public", Name = "idea_file" )]
     public partial class IdeaFile
     {
         [Column( "idea_id" ), NotNull] public int IdeaId { get; set; } // integer
@@ -177,7 +177,7 @@ namespace IdeaMarket.DataModel
         #endregion
     }
 
-    [Table( Schema = "dbo", Name = "user" )]
+    [Table( Schema = "public", Name = "user" )]
     public partial class User
     {
         [Column( "id" ), PrimaryKey, Identity] public int ID { get; set; } // integer
@@ -188,7 +188,7 @@ namespace IdeaMarket.DataModel
         [Column( "visibility_id" )] public Visibility Visibility { get; set; }
     }
 
-    [Table( Schema = "dbo", Name = "vendor" )]
+    [Table( Schema = "public", Name = "vendor" )]
     public partial class Vendor
     {
         [Column( "id" ), PrimaryKey, Identity] public int ID { get; set; } // integer

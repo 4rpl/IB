@@ -21,15 +21,21 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink( "Банк Бизнес-Идей", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink( "Банк Бизнес-Идей", "Index", "Vendor", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink( "Мои Идеи", "Index", "Vendor" )</li>
-                    <li>@Html.ActionLink( "Предложения (0)", "Contact", "Home" )</li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li>@Html.ActionLink( "YudovIlya - продавец", "Contact", "Home" )</li>
+                    @if( string.IsNullOrWhiteSpace( Request.Cookies["token"]?.Value ) )
+                    {
+                        <li>@Html.ActionLink( "Зарегистрироваться", "Register", "Home" )</li>
+                        <li>@Html.ActionLink( "Войти", "Login", "Home" )</li>
+                    }
+                    else
+                    {
+                        <li>@Html.ActionLink( "Выйти", "Logoff", "Home" )</li>
+                    }
                 </ul>
             </div>
         </div>

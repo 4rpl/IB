@@ -1,14 +1,15 @@
 ﻿<div class="row">
     <div class="col-md-2 col-sm-2 sidebar">
         <ul class="nav nav-sidebar">
-            <li>@Html.ActionLink( "Профиль", "Settings", controllerName: "Vendor" )</li>
+            <li>@Html.ActionLink( "Профиль", "Profile", controllerName: "Vendor" )</li>
+            <li>@Html.ActionLink( "Кошелёк", "Purse", "Vendor" )</li>
         </ul>
         <hr />
         <ul class="nav nav-sidebar">
             <li>@Html.ActionLink( "Мои идеи", "List", controllerName: "Vendor" )</li>
-            <li>@Html.ActionLink( "Предложения (0)", "List", controllerName: "Vendor" )</li>
-            <li>@Html.ActionLink( "Мои отзывы (0)", "Comments", "Vendor" )</li>
-            <li>@Html.ActionLink( "Кошелёк", "Purse", "Vendor" )</li>
+            <li>@Html.ActionLink( "Покупатели", "Buyers", controllerName: "Vendor" )</li>
+            <li><a href="@Url.Action( "List" )">Предложения <span class="badge">1</span></a></li>
+            <li><a href="@Url.Action( "Comments" )">Отзывы</a></li>
         </ul>
     </div>
 </div>

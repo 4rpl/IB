@@ -1,0 +1,60 @@
+﻿@model IdeaMarket.Models.RegistrationModel
+@{
+    ViewBag.Title = "Регистрация";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Регистрация
+                </div>
+                <div class="panel-body">
+                    @using( Html.BeginForm( "Register", "Home", FormMethod.Post, new { @class = "form-group-sm" } ) )
+                    {
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-4 text-right">
+                                    @Html.LabelFor( i => i.Login, "Логин" )
+                                </div>
+                                <div class="col-md-6">
+                                    @Html.TextBoxFor( i => i.Login, new { @class = "form-control", required = true } )
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 text-right">
+                                    @Html.LabelFor( i => i.Name, "Настоящее имя" )
+                                </div>
+                                <div class="col-md-6">
+                                    @Html.TextBoxFor( i => i.Name, new { @class = "form-control", required = true } )
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 text-right">
+                                    @Html.LabelFor( i => i.Email, "Контактный e-mail" )
+                                </div>
+                                <div class="col-md-6">
+                                    @Html.TextBoxFor( i => i.Email, new { @class = "form-control", type = "email", required = true } )
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 text-right">
+                                    @Html.LabelFor( i => i.Password, "Пароль" )
+                                </div>
+                                <div class="col-md-6">
+                                    @Html.TextBoxFor( i => i.Password, new { @class = "form-control", type = "password", required = true } )
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-10 text-right">
+                                    <input type="submit" class="btn btn-success" value="Зарегистрироваться" />
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
